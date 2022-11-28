@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All users</title>
+</head>
+<body>
+<h1>Users:</h1>
+<table>
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Email</th>
+        <th>Roles</th>
+    </tr>
+    <tr th:each="prod : ${user}">
+        <td><a th:href="@{admin/edit/{id}(id=${prod.getId()})}">Edit</a></td>
+        <td th:text="${prod.getUsername()}"></td>
+        <td th:text="${prod.getAge()}"></td>
+        <td th:text="${prod.getEmail()}"></td>
+        <td th:each="user : ${prod.roles}" th:text="${user}"></td>
+    </tr>
+</table>
+<p><a href="/admin/new">Create user</a></p>
+
+</body>
+</html>
