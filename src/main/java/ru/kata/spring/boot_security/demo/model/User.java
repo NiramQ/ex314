@@ -24,7 +24,7 @@ public class User implements UserDetails {
 
     @NotEmpty(message = "Enter username")
     @Size(min = 2, max = 40, message = "2..40 characters")
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Min(value = 0, message = "Age greater than 0")
@@ -40,12 +40,11 @@ public class User implements UserDetails {
     @NotEmpty(message = "Enter password")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @Fetch(FetchMode.JOIN)
     private Set<Role> roles;
 
     public User() {
@@ -140,11 +139,9 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", age=" + age +
                 ", email='" + email + '\'' +
-                ", roles=" + roles +
                 '}';
     }
 }

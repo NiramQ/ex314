@@ -42,7 +42,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void removeUser(int id) {
-        entityManager.remove(entityManager.contains(getUserById(id)) ? getUserById(id) : entityManager.merge(getUserById(id)));
+        entityManager.remove(getUserById(id));
     }
 
     @Override

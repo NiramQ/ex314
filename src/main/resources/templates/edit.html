@@ -15,13 +15,20 @@
     <input type="text" th:field="*{email}" id="email"/>
     <label for="password">Enter password: </label>
     <input type="password" th:field="*{password}" id="password"/>
-    <label for="roles">Choose roles</label>
-    <input type="checkbox" name="roles" id="roles" th:each="role : ${user.roles}"
-           th:value="${role.getId()}" th:text="${role.getName()}" th:field="*{roles}">
+    <p>
+        <label for="roles">Choose roles</label>
+        <input type="checkbox" name="roles" id="roles" th:each="role : ${roles}"
+               th:value="${role.getId()}" th:text="${role.getName()}" th:field="*{roles}">
+    </p>
     <input type="submit" value="Update"/>
 </form>
+<br>
 <form th:method="DELETE" th:action="@{{id}(id=${user.getId()})}">
     <input type="submit" value="Delete">
+</form>
+<br>
+<form name="logoutForm" th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
 </form>
 </body>
 </html>

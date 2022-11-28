@@ -8,5 +8,7 @@
 <div th:text="${user.toString()}"></div>
 
 </body>
-<p><a href="/logout">logout</a></p>
+<form name="logoutForm" th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
 </html>

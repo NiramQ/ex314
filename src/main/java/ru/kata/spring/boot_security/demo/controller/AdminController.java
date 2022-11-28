@@ -8,6 +8,8 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -22,7 +24,7 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public String adminPage(Model model) {
+    public String getAdminPage(Model model) {
         model.addAttribute("user", userService.getListUsers());
         return "main";
     }
@@ -35,22 +37,21 @@ public class AdminController {
     }
 
     @PostMapping("/new")
-    @ResponseBody
     public String saveNewPerson(@ModelAttribute("user") User user) {
         userService.saveUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/edit/{id}")
-    public String getPersonForEdit(Model model, @PathVariable("id") int id) {
+    public String getPageForEdit(Model model, @PathVariable("id") int id) {
+        model.addAttribute("roles", roleService.getAllRoles());
         model.addAttribute("user", userService.getUserById(id));
-        //model.addAttribute("roles", roleService.findRoleById());
         return "edit";
     }
 
     @DeleteMapping("/edit/{id}")
     public String deletePerson(@PathVariable("id") int id) {
-        userService.removeUser(id);
+        userService.removeUserById(id);
         return "redirect:/admin";
     }
 

@@ -22,6 +22,8 @@
     </tr>
 </table>
 <p><a href="/admin/new">Create user</a></p>
-
+<form name="logoutForm" th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
 </body>
 </html>
