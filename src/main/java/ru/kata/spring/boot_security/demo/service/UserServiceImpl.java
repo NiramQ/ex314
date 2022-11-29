@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.UserDAO;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
@@ -17,40 +17,49 @@ import java.util.List;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
-    private final UserDAO userDAO;
+
+    private BCryptPasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserDAO userDAO) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userDAO = userDAO;
     }
 
     @Override
     public List<User> getListUsers() {
-        return userDAO.getListUsers();
+        return userRepository.findAll();
     }
 
     @Override
     @Transactional
     public void saveUser(User user) {
-        userDAO.saveUser(user);
+        user.setPassword(encoder().encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     @Override
     @Transactional
     public void updateUser(User user, int id) {
-        userDAO.updateUser(user, id);
+        User userForUpdate = getUserById(id);
+        userForUpdate.setUsername(user.getUsername());
+        userForUpdate.setPassword(user.getPassword());
+        userForUpdate.setAge(user.getAge());
+        userForUpdate.setEmail(user.getEmail());
+        userForUpdate.setRoles(user.getRoles());
+        userRepository.save(userForUpdate);
     }
 
     @Override
     @Transactional
     public void removeUserById(int id) {
-        userDAO.removeUser(id);
+        userRepository.deleteById(id);
     }
 
     @Override
     public User getUserById(int id) {
-        return userDAO.getUserById(id);
+        return userRepository.getById(id);
     }
 
     @Override
