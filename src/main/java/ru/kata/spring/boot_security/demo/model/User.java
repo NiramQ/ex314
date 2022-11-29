@@ -27,7 +27,7 @@ public class User implements UserDetails {
     @Column(name = "username", unique = true)
     private String username;
 
-    @Min(value = 0, message = "Age greater than 0")
+    @Min(value = 12, message = "Age greater than 11")
     @Column(name = "age")
     private int age;
 
@@ -38,6 +38,7 @@ public class User implements UserDetails {
 
     @Column(name = "password")
     @NotEmpty(message = "Enter password")
+    @Size(min = 4, max = 500, message = "Password 4..500 characters")
     private String password;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
