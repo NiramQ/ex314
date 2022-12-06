@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New user</title>
+    <title>Register</title>
 </head>
 <body>
 <form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
@@ -28,15 +28,18 @@
             <td style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
         </tr>
         <tr>
-            <td><label for="roles">Roles:</label></td>
-            <td><input type="checkbox" name="roles" id="roles" th:each="role : ${roles}"
-                       th:value="${role.getId()}" th:text="${role.getName()}" th:field="*{roles}"></td>
+            <td>
+                <label for="roles">Roles</label>
+                <select size="2" id="roles" multiple required="required" th:field="*{roles}">
+                    <option selected="selected" value="1">ADMIN</option>
+                    <option selected="selected" value="2">USER</option>
+                </select>
+            </td>
         </tr>
     </table>
-
     <input type="submit" value="Save"/>
 </form>
-<br>
+<br/>
 <form name="logoutForm" th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out"/>
 </form>

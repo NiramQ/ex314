@@ -1,7 +1,5 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -41,7 +39,7 @@ public class User implements UserDetails {
     @Size(min = 4, max = 500, message = "Password 4..500 characters")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -51,6 +49,10 @@ public class User implements UserDetails {
     public User() {
     }
 
+    public User(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     public User(int id, String username, int age, String email, String password, Set<Role> roles) {
         this.id = id;
         this.username = username;
@@ -58,6 +60,14 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.roles = roles;
+    }
+
+    public User(int id, String username, int age, String email, String password) {
+        this.id = id;
+        this.username = username;
+        this.age = age;
+        this.email = email;
+        this.password = password;
     }
 
     @Override
@@ -149,9 +159,11 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
+                "id=" + id +
+                ", username='" + username + '\'' +
                 ", age=" + age +
                 ", email='" + email + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }
