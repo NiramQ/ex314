@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.config;
+package ru.kata.spring.boot_security.demo.Init;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class InitRolesAndUsers {
     }
 
     @PostConstruct
-    public void start() {
+    public void onStart() {
         roleRepository.save(new Role(1, "ROLE_ADMIN"));
         roleRepository.save(new Role(2, "ROLE_USER"));
         Set<Role> adminRole = new HashSet<>();
