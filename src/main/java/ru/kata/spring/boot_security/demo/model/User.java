@@ -21,11 +21,10 @@ public class User implements UserDetails {
     private int id;
 
     @NotEmpty(message = "Enter username")
-    @Size(min = 2, max = 40, message = "2..40 characters")
     @Column(name = "username", unique = true)
     private String username;
 
-    @Min(value = 12, message = "Age greater than 11")
+    @Min(value = 1, message = "Age greater than 0")
     @Column(name = "age")
     private int age;
 
@@ -36,7 +35,6 @@ public class User implements UserDetails {
 
     @Column(name = "password")
     @NotEmpty(message = "Enter password")
-    @Size(min = 4, max = 500, message = "Password 4..500 characters")
     private String password;
 
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)

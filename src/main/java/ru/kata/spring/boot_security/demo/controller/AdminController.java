@@ -10,7 +10,7 @@ import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 import ru.kata.spring.boot_security.demo.util.UserValidator;
 
-import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/admin")
@@ -27,51 +27,44 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public String getAdminPage(Model model) {
-        model.addAttribute("user", userService.getListUsers());
+    public String getAdminPage(Model model, Principal principal) {
+        model.addAttribute("allUsers", userService.getListUsers())
+                .addAttribute("newUser", new User())
+                .addAttribute("currentUser", userService.getUserByUsername(principal.getName()));
         return "/main";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/update")
     public String getFormSavePerson(Model model) {
-        model.addAttribute("user", new User())
+        model.addAttribute("newUser", new User())
                 .addAttribute("roles", roleService.getAllRoles());
-        return "/new";
+        return "/main";
     }
 
-    @PostMapping("/new")
-    public String saveNewPerson(@ModelAttribute("user") @Valid User user,
+    @PostMapping("/create")
+    public String saveNewPerson(@ModelAttribute("user") User user,
                                 BindingResult bindingResult) {
         userValidator.validate(user, bindingResult);
-        System.out.println(user);
-        if (bindingResult.hasErrors()) {
-            return "/new";
-        }
         userService.saveUser(user);
-
         return "redirect:/admin";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}")
     public String getPageForEdit(Model model, @PathVariable("id") int id) {
         model.addAttribute("roles", roleService.getAllRoles());
         model.addAttribute("user", userService.getUserById(id));
-        return "/edit";
+        return "/user";
     }
 
-    @DeleteMapping("/edit/{id}")
+    @PostMapping("/{id}/delete")
     public String deletePerson(@PathVariable("id") int id) {
         userService.removeUserById(id);
         return "redirect:/admin";
     }
 
-    @PatchMapping("/edit/{id}")
-    public String updatePerson(@ModelAttribute("user") @Valid User user,
-                               BindingResult bindingResult,
+    @PostMapping("/{id}/update")
+    public String updatePerson(@ModelAttribute("user") User user,
                                @PathVariable("id") int id) {
-        if (bindingResult.hasErrors()) {
-            return "/edit";
-        }
         userService.updateUser(user, id);
         return "redirect:/admin";
     }
